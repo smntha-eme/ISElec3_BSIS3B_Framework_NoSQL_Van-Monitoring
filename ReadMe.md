@@ -3,8 +3,11 @@
 
 ## TEAM MEMBERS & ASSIGNED ROLES ##
 Project Manager & Tester/QA: Dela Paz, Paula Bianca D.
+
 Backend Lead: Musa, Samantha Mae A.
+
 Frontead Lead: Molleda, Sid Dione M.
+
 Database Admin: Cortes, Aina Shanell C.
 
 ## OBJECTIVES ##
