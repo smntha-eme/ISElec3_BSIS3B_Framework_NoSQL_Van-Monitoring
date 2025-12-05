@@ -25,9 +25,8 @@ errors.
 ● To create a centralized system that promotes convenience, transparency, and efficient
 transportation flow in Polangui.
 
-## WHAT IS THIS ALL ABOUT ##
-● blah blah blah proper name proper stuff
-● blah blah blah proper name proper stuff
-● blah blah blah proper name proper stuff
-● blah blah blah proper name proper stuff
-
+# Step 1: Initialize Express
+- Installed Express.js
+- Created app.js
+- Added root GET route
+- Tested server at http://localhost:3000
