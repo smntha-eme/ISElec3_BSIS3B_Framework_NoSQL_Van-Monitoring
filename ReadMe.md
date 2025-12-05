@@ -47,3 +47,10 @@ transportation flow in Polangui.
 - Connected vanRoutes in app.js
 - Tested APIs with Postman/Thunder Client
 
+# Step 5: Reservation API
+- Created reservationController.js with CRUD functionality
+- Created reservationRoutes.js with GET, POST, PUT endpoints
+- Connected routes in app.js
+- Tested reservation routes with Postman/Thunder Client
+
+
