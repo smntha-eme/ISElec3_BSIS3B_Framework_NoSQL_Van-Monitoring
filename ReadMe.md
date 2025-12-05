@@ -26,4 +26,8 @@ errors.
 transportation flow in Polangui.
 
 ## WHAT IS THIS ALL ABOUT ##
+● blah blah blah proper name proper stuff
+● blah blah blah proper name proper stuff
+● blah blah blah proper name proper stuff
+● blah blah blah proper name proper stuff
 
