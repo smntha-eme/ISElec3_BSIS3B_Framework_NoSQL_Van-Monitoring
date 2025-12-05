@@ -37,3 +37,13 @@ transportation flow in Polangui.
 - Added homeRoutes.js
 - Connected route in app.js
 - Tested home route at http://localhost:3000
+
+# Step 3: Van Routes and Controller
+- Created vanController.js with:
+  - getAllVans
+  - getVanById
+  - updateVan
+- Created vanRoutes.js with GET and PUT endpoints
+- Connected vanRoutes in app.js
+- Tested APIs with Postman/Thunder Client
+
