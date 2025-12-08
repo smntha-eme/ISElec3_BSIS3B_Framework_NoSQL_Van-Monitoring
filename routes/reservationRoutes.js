@@ -61,4 +61,90 @@ router.post('/', async (req, res) => {
   }
 });
 
+// GET /reservations → list all reservations with van details
+router.get("/", async (req, res) => {
+  try {
+    const reservations = await Reservation.find().populate("van"); // FIXED populate field
+
+    res.status(200).json(reservations);
+  } catch (error) {
+    console.error("GET reservations error:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+});
+
+// GET /reservations/:id → get a specific reservation
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // Validate ID
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid reservation ID format" });
+  }
+
+  try {
+    const reservation = await Reservation.findById(id).populate("van");
+
+    if (!reservation) {
+      return res.status(404).json({ error: "Reservation not found" });
+    }
+
+    res.status(200).json(reservation);
+
+  } catch (error) {
+    console.error("GET reservation by ID error:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
+});
+
+// DELETE /reservations/:id → cancel reservation + return seat
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // Validate reservation ID
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid reservation ID format" });
+  }
+
+  try {
+    // Find reservation
+    const reservation = await Reservation.findById(id);
+
+    if (!reservation) {
+      return res.status(404).json({ error: "Reservation not found" });
+    }
+
+    // Find van
+    const van = await Van.findById(reservation.van);
+    if (van) {
+      van.availableSeats += 1; // return seat
+      await van.save();
+    }
+
+    // Delete reservation
+    await reservation.deleteOne();
+
+    return res.status(200).json({
+      message: "Reservation cancelled successfully",
+    });
+
+  } catch (error) {
+    console.error("DELETE reservation error:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
+});
+
+
+
+
+
 module.exports = router;

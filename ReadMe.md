@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-Commit test 
-SAMANTHA MAE MUSA 
+
 =======
 # UV Express Van Monitoring and Reservation System for Legazpi-Polangui Route 
  Finals Requirement For IS ELEC 3 
@@ -52,7 +50,16 @@ transportation flow in Polangui.
 - Tested APIs with Postman/Thunder Client
 
 # Step 4: Reservation API
-- Created reservationController.js with CRUD functionality
-- Created reservationRoutes.js with GET, POST, PUT endpoints
-- Connected routes in app.js
-- Tested reservation routes with Postman/Thunder Client
+
+- Created reservationController.js with full CRUD functionality:
+  - POST /reservations → Create a new reservation with seat validation.
+  - GET /reservations → Retrieve all reservations.
+  - GET /reservations/:id → Retrieve reservation by ID.
+  - DELETE /reservations/:id → Cancel reservation and restore seat count.
+
+- Created reservationRoutes.js and connected it in app.js.
+Implemented error handling for:
+  - 400 → Bad request (missing fields, invalid ObjectId)
+  - 404 → Not found (Van or Reservation not found)
+  - 500 → Internal server errors
+  - Tested reservation endpoints using Postman/Thunder Client.
