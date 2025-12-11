@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Reservation = require('../models/Reservation');
-const Van = require('../models/van');
+const Van = require('../models/Van');
 
 // POST /reservations → create reservation and reduce available seats
 router.post('/', async (req, res) => {

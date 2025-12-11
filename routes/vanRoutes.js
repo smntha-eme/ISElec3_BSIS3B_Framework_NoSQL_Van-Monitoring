@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose'); // needed for ObjectId check
-const Van = require('../models/van');
+const Van = require('../models/Van');
 
 // GET /vans → return all vans
 router.get('/', async (req, res) => {

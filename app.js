@@ -5,7 +5,7 @@ const cors = require('cors'); // <-- import cors
 const app = express();
 
 // Models
-const Van = require('./models/van');
+const Van = require('./models/Van');
 const Reservation = require('./models/Reservation');
 
 app.use(express.json());
