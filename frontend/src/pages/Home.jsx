@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -10,9 +11,12 @@ export default function Home() {
         <p className="text-gray-700 mb-8 text-lg">
           Easily check van availability and reserve your seat in real-time.
         </p>
-        <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition duration-300">
-          View Vans & Reserve Now
-        </button>
+        <Link
+          to="/reservations"  // links to your Reservations page
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition duration-300 inline-block"
+        >
+          Reserve Seat Now
+        </Link>
       </div>
     </div>
   );
