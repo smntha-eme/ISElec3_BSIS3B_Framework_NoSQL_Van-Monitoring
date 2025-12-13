@@ -5,7 +5,9 @@ import Home from "./pages/Home";
 import Vans from "./pages/Vans";
 import ReservationForm from "./pages/ReservationForm";
 import ReservationsLists from "./pages/ReservationsLists";
-import DriverPanel from "./pages/DriverPanel"; // new
+import DriverPanel from "./pages/DriverPanel";
+import DriverLogin from "./pages/DriverLogin"; // new
+import DriverRegister from "./pages/DriverRegister"; // new
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
         <Route path="/vans" element={<Vans />} />
         <Route path="/reservation-form" element={<ReservationForm />} />
         <Route path="/reservations" element={<ReservationsLists />} />
-        <Route path="/driver-panel" element={<DriverPanel />} /> {/* new */}
+        <Route path="/driver-panel" element={<DriverPanel />} />
+        <Route path="/driver-login" element={<DriverLogin />} />
+        <Route path="/driver-register" element={<DriverRegister />} />
       </Routes>
     </Router>
   );

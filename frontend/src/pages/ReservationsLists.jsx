@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
 
-const ReservationsLists = () => {
+const ReservationsList = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchReservations = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/reservations");
+      const data = await res.json();
+      setReservations(data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching reservations:", err);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("http://localhost:3000/reservations")
-      .then(res => res.json())
-      .then(data => {
-        setReservations(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+    fetchReservations();
+    const interval = setInterval(fetchReservations, 5000); // live refresh every 5s
+    return () => clearInterval(interval);
   }, []);
 
   if (loading)
@@ -32,37 +37,42 @@ const ReservationsLists = () => {
         </h2>
 
         {reservations.length === 0 ? (
-          <p className="text-center text-green-700">No reservations yet</p>
+          <p className="text-center text-green-700 font-semibold">
+            No reservations yet
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-              <thead className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+              <thead className="bg-gradient-to-r from-green-400 to-green-500 text-white">
                 <tr>
                   <th className="p-3 text-left">Passenger Name</th>
                   <th className="p-3 text-left">Van Route</th>
                   <th className="p-3 text-left">Driver</th>
-                  <th className="p-3 text-left">Seat Number</th>
-                  <th className="p-3 text-left">Van Status</th>
+                  <th className="p-3 text-center">Seat Number</th>
+                  <th className="p-3 text-center">Van Status</th>
                 </tr>
               </thead>
               <tbody>
                 {reservations.map((resv) => (
-                  <tr key={resv._id} className="text-black text-center">
-                    <td className="p-3 border">{resv.passengerName}</td>
-                    <td className="p-3 border">{resv.van?.route || "N/A"}</td>
-                    <td className="p-3 border">{resv.van?.driverName || "N/A"}</td>
-                    <td className="p-3 border">{resv.seatNumber}</td>
-                    <td className="p-3 border">
+                  <tr
+                    key={resv._id}
+                    className="text-black text-center hover:bg-green-100 transition"
+                  >
+                    <td className="p-3 border text-left">{resv.passengerName}</td>
+                    <td className="p-3 border text-left">{resv.van?.route || "N/A"}</td>
+                    <td className="p-3 border text-left">{resv.van?.driverName || "N/A"}</td>
+                    <td className="p-3 border text-center">{resv.seatNumber}</td>
+                    <td className="p-3 border text-center">
                       {resv.van?.status ? (
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-semibold ${
                             resv.van.status === "Waiting"
-                              ? "bg-yellow-400 text-black"
+                              ? "bg-yellow-300 text-black"
                               : resv.van.status === "Traveling"
-                              ? "bg-blue-400 text-black"
+                              ? "bg-blue-300 text-black"
                               : resv.van.status === "Arrived"
-                              ? "bg-green-400 text-black"
-                              : "bg-gray-400 text-black"
+                              ? "bg-green-300 text-black"
+                              : "bg-gray-300 text-black"
                           }`}
                         >
                           {resv.van.status}
@@ -82,4 +92,4 @@ const ReservationsLists = () => {
   );
 };
 
-export default ReservationsLists;
+export default ReservationsList;

@@ -42,7 +42,7 @@ export default function Vans() {
 
   if (loading)
     return (
-      <div className="p-8 text-center text-white text-xl font-semibold">
+      <div className="p-8 text-center text-green-700 text-xl font-semibold">
         Loading vans...
       </div>
     );
@@ -55,8 +55,8 @@ export default function Vans() {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-green-600 to-blue-600 p-8">
-      <h1 className="text-4xl font-extrabold text-center text-white mb-8">
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-50 p-8">
+      <h1 className="text-4xl font-extrabold text-center text-green-900 mb-8">
         Available Vans
       </h1>
 
@@ -67,12 +67,12 @@ export default function Vans() {
           placeholder="Search by route, driver, or plate..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-2/3 p-3 rounded-xl border border-white bg-white/20 text-white placeholder-white focus:ring-2 focus:ring-white outline-none transition"
+          className="w-full md:w-2/3 p-3 rounded-xl border border-green-300 bg-white text-green-900 placeholder-green-400 focus:ring-2 focus:ring-green-400 outline-none transition"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full md:w-1/3 p-3 rounded-xl border border-white bg-white/20 text-black focus:ring-2 focus:ring-white outline-none transition"
+          className="w-full md:w-1/3 p-3 rounded-xl border border-green-300 bg-white text-green-900 focus:ring-2 focus:ring-green-400 outline-none transition"
         >
           <option value="">All Statuses</option>
           <option value="Waiting">Waiting</option>
@@ -85,7 +85,7 @@ export default function Vans() {
       {/* Vans Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredVans.length === 0 ? (
-          <p className="text-center text-white col-span-full">No vans found.</p>
+          <p className="text-center text-green-700 col-span-full">No vans found.</p>
         ) : (
           filteredVans.map((van) => {
             const canReserve = van.availableSeats > 0 && van.status === "Waiting";
@@ -93,27 +93,27 @@ export default function Vans() {
             return (
               <div
                 key={van._id}
-                className="bg-white/20 shadow-lg rounded-2xl p-6 border border-white/30 hover:scale-105 transform transition duration-300"
+                className="bg-white rounded-2xl p-6 border border-green-200 shadow-md hover:shadow-xl transition transform hover:scale-105"
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold text-white">{van.route}</h2>
+                  <h2 className="text-2xl font-bold text-green-900">{van.route}</h2>
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-semibold 
                       ${
                         van.status === "Waiting"
-                          ? "bg-yellow-400 text-black"
+                          ? "bg-yellow-200 text-green-900"
                           : van.status === "Traveling"
-                          ? "bg-blue-400 text-black"
+                          ? "bg-blue-200 text-green-900"
                           : van.status === "Arrived"
-                          ? "bg-green-400 text-black"
-                          : "bg-gray-400 text-black"
+                          ? "bg-green-200 text-green-900"
+                          : "bg-gray-200 text-green-900"
                       }`}
                   >
                     {van.status}
                   </span>
                 </div>
 
-                <div className="text-white space-y-2 mb-4">
+                <div className="text-green-900 space-y-2 mb-4">
                   <p>
                     <span className="font-semibold">Driver:</span> {van.driverName}
                   </p>
@@ -121,8 +121,7 @@ export default function Vans() {
                     <span className="font-semibold">Plate:</span> {van.plateNumber}
                   </p>
                   <p>
-                    <span className="font-semibold">Seats:</span>{" "}
-                    {van.availableSeats}/{van.totalSeats} available
+                    <span className="font-semibold">Seats:</span> {van.availableSeats}/{van.totalSeats} available
                   </p>
                 </div>
 
@@ -130,10 +129,9 @@ export default function Vans() {
                   onClick={() => canReserve && navigate(`/reservation-form?vanId=${van._id}`)}
                   disabled={!canReserve}
                   className={`w-full text-center font-semibold py-2 rounded-xl shadow-md transition duration-300
-                    ${
-                      canReserve
-                        ? "bg-green-500 hover:bg-green-600 text-white cursor-pointer"
-                        : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                    ${canReserve
+                      ? "bg-green-500 hover:bg-green-600 text-white cursor-pointer"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
                     }`}
                 >
                   {canReserve ? "Reserve Seat" : "Unavailable"}
