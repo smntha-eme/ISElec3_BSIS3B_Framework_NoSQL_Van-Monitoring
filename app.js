@@ -1,44 +1,38 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors'); // <-- import cors
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
 const app = express();
 
-// Models
-const Van = require('./models/Van');
-const Reservation = require('./models/Reservation');
-
-
+// ================= MIDDLEWARE =================
 app.use(express.json());
+app.use(cors());
 
-// Enable CORS
-app.use(cors()); // <-- add this line BEFORE your routes
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-})
-  .then(() => console.log("MongoDB connected successfully!"))
+// ================= DATABASE =================
+mongoose
+  .connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+  })
+  .then(() => console.log("✅ MongoDB connected successfully!"))
   .catch((err) => {
-    console.log("MongoDB connection error:", err.message);
-    console.log("Full error:", err);
+    console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
 
-// Use modular routes
-const vanRoutes = require('./routes/vanRoutes');
-const reservationRoutes = require('./routes/reservationRoutes');
-const driverRoutes = require("./routes/driverRoutes");
-app.use('/vans', vanRoutes);
-app.use('/reservations', reservationRoutes);
-app.use("/drivers", driverRoutes);
+// ================= ROUTES =================
+app.use("/vans", require("./routes/vanRoutes"));
+app.use("/reservations", require("./routes/reservationRoutes"));
+app.use("/drivers", require("./routes/driverRoutes"));
 
-// Example test route
-app.get('/', (req, res) => {
-  res.send('Welcome to UV Express Van Monitoring!');
+// ================= TEST ROUTE =================
+app.get("/", (req, res) => {
+  res.send("🚐 Welcome to UV Express Van Monitoring!");
 });
 
-// Start server
+// ================= SERVER =================
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`🚀 Server running at http://localhost:${PORT}`)
+);

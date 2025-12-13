@@ -1,16 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const vanSchema = new mongoose.Schema({
   plateNumber: { type: String, required: true },
-  route: { type: String, required: true },
-  driverName: { type: String, required: true },
-  totalSeats: { type: Number, required: true },
-  availableSeats: { type: Number, required: true },
-  status: { 
-    type: String, 
-    enum: ['Arrived', 'Waiting', 'Traveling', 'Parked'], 
-    default: 'Waiting' 
-  }
-}, { collection: 'vans' }); // collection name in DB
+  route: {
+    type: String,
+    default: "Polangui - Legazpi",
+  },
+  status: {
+    type: String,
+    enum: ["Waiting", "Traveling", "Arrived", "Parked"],
+    default: "Waiting",
+  },
+  availableSeats: {
+    type: Number,
+    default: 12,
+  },
+  driver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Driver",
+  },
+});
 
-module.exports = mongoose.model('Van', vanSchema); // model name must match ref in Reservation
+module.exports = mongoose.model("Van", vanSchema);
