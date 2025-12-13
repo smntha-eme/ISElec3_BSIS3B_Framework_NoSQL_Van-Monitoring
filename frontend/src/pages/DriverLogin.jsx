@@ -1,51 +1,65 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function DriverLogin({ onLogin }) {
+export default function DriverLogin() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/drivers/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+      const res = await axios.post("http://localhost:3000/drivers/login", {
+        email,
+        password,
       });
-      const data = await res.json();
-      if (!res.ok) setError(data.error || "Login failed");
-      else onLogin(data.driver, data.token);
-    } catch (err) { console.error(err); }
+
+      localStorage.setItem("driverToken", res.data.token);
+      navigate("/driver-panel");
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.error || "Login failed");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 p-6">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-green-900 text-center mb-6">Driver Login</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 text-green-900">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border border-green-300 rounded"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 text-green-900">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border border-green-300 rounded"
-            />
-          </div>
-          <button className="w-full bg-green-600 text-white py-2 rounded">Login</button>
-          {error && <p className="text-red-600 mt-2">{error}</p>}
-        </form>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Driver Login</h2>
+
+        <div className="mb-4">
+          <label className="block mb-1 font-semibold">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-1 font-semibold">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white font-semibold py-2 rounded-xl hover:bg-blue-600"
+        >
+          Login
+        </button>
+      </form>
     </div>
   );
 }

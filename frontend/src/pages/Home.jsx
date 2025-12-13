@@ -8,8 +8,18 @@ export default function Home() {
         <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-800">
           Welcome to UV Express Polangui-Legazpi
         </h2>
-        <p className="text-gray-700 mb-8 text-lg">
+        <p className="text-gray-700 mb-4 text-lg">
           Easily check van availability and reserve your seat in real-time.
+        </p>
+
+        {/* Driver Login/Register link */}
+        <p className="mb-8 text-green-700 font-semibold">
+          <Link
+            to="/driver-auth"
+            className="underline hover:text-green-900 transition duration-300"
+          >
+            Log In or Register if you are a driver
+          </Link>
         </p>
 
         <div className="space-x-4">

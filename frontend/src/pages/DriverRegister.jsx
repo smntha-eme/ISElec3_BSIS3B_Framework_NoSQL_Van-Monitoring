@@ -1,48 +1,83 @@
-    import React, { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function DriverRegister() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
-    name: "", licenseId: "", address: "", age: "", birthday: "", email: "", password: "", profilePic: ""
+    name: "",
+    licenseId: "",
+    address: "",
+    age: "",
+    birthday: "",
+    email: "",
+    password: "",
+    plateNumber: "",
   });
-  const [success, setSuccess] = useState("");
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/drivers/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+      const res = await axios.post("http://localhost:3000/drivers/register", form);
+      alert(res.data.message);
+
+      // Login immediately to get token
+      const loginRes = await axios.post("http://localhost:3000/drivers/login", {
+        email: form.email,
+        password: form.password,
       });
-      const data = await res.json();
-      if (!res.ok) alert(data.error || "Failed to register");
-      else setSuccess("Registered successfully! You can log in now.");
-    } catch (err) { console.error(err); }
+
+      localStorage.setItem("driverToken", loginRes.data.token);
+
+      navigate("/driver-panel");
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.error || "Registration failed");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 p-6">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
-        <h1 className="text-2xl font-bold text-green-900 text-center mb-6">Driver Registration</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {Object.keys(form).map((key) => (
-            <div key={key}>
-              <label className="block mb-1 text-green-900">{key}</label>
-              <input
-                type={key === "password" ? "password" : "text"}
-                name={key}
-                value={form[key]}
-                onChange={handleChange}
-                className="w-full p-2 border border-green-300 rounded"
-              />
-            </div>
-          ))}
-          <button className="w-full bg-green-600 text-white py-2 rounded">Register</button>
-        </form>
-        {success && <p className="text-green-700 mt-4 text-center">{success}</p>}
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Driver Registration</h2>
+
+        {[
+          { label: "Name", name: "name", type: "text" },
+          { label: "License ID", name: "licenseId", type: "text" },
+          { label: "Address", name: "address", type: "text" },
+          { label: "Age", name: "age", type: "number" },
+          { label: "Birthday", name: "birthday", type: "date" },
+          { label: "Email", name: "email", type: "email" },
+          { label: "Password", name: "password", type: "password" },
+          { label: "Van Plate Number", name: "plateNumber", type: "text" },
+        ].map((field) => (
+          <div className="mb-4" key={field.name}>
+            <label className="block mb-1 font-semibold">{field.label}</label>
+            <input
+              type={field.type}
+              name={field.name}
+              value={form[field.name]}
+              onChange={handleChange}
+              required
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+        ))}
+
+        <button
+          type="submit"
+          className="w-full bg-green-500 text-white font-semibold py-2 rounded-xl hover:bg-green-600"
+        >
+          Register
+        </button>
+      </form>
     </div>
   );
 }
