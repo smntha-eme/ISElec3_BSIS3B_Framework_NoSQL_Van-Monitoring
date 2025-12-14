@@ -1,28 +1,59 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const ReservationsList = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [driverLoaded, setDriverLoaded] = useState(false);
+  const [driverVanId, setDriverVanId] = useState(null);
 
-  const fetchReservations = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/reservations");
-      const data = await res.json();
-      setReservations(data);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching reservations:", err);
-      setLoading(false);
-    }
-  };
+  const token = localStorage.getItem("driverToken");
 
   useEffect(() => {
-    fetchReservations();
-    const interval = setInterval(fetchReservations, 5000); // live refresh every 5s
-    return () => clearInterval(interval);
-  }, []);
+    const fetchDriverAndReservations = async () => {
+      setLoading(true);
+      
+      try {
+        let vanId = null;
+        
+        // If driver is logged in, fetch driver details first
+        if (token) {
+          const driverRes = await axios.get("http://localhost:3000/drivers/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          vanId = driverRes.data.van?._id;
+          setDriverVanId(vanId);
+        }
+        
+        setDriverLoaded(true);
 
-  if (loading)
+        // Now fetch reservations
+        const res = await fetch("http://localhost:3000/reservations");
+        const data = await res.json();
+        
+        // Filter reservations by driver's van if logged in
+        if (token && vanId) {
+          const filteredData = data.filter(
+            (resv) => resv.van?._id === vanId
+          );
+          setReservations(filteredData);
+        } else {
+          setReservations(data);
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchDriverAndReservations();
+    const interval = setInterval(fetchDriverAndReservations, 5000); // live refresh every 5s
+    return () => clearInterval(interval);
+  }, [token]);
+
+  if (loading || !driverLoaded)
     return (
       <p className="p-6 text-center text-green-700 font-semibold">
         Loading reservations...

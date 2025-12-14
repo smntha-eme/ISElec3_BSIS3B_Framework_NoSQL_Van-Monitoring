@@ -8,6 +8,7 @@ import ReservationsLists from "./pages/ReservationsLists";
 import DriverPanel from "./pages/DriverPanel";
 import DriverLogin from "./pages/DriverLogin"; // new
 import DriverRegister from "./pages/DriverRegister"; // new
+import Ticket from "./pages/Ticket";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/vans" element={<Vans />} />
         <Route path="/reservation-form" element={<ReservationForm />} />
+        <Route path="/ticket" element={<Ticket />} />
         <Route path="/reservations" element={<ReservationsLists />} />
         <Route path="/driver-panel" element={<DriverPanel />} />
         <Route path="/driver-login" element={<DriverLogin />} />

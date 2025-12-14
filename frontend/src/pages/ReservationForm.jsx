@@ -1,26 +1,36 @@
 import React, { useEffect, useState, useContext } from "react";
 import { VanContext } from "../context/vanContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ReservationForm() {
   const { vans, fetchVans } = useContext(VanContext);
   const [passengerName, setPassengerName] = useState("");
-  const [vanId, setVanId] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVan, setSelectedVan] = useState(null);
   const [success, setSuccess] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Get vanId from query params if user clicked "Reserve Seat" from Vans page
-  const location = useLocation();
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const selectedVanId = params.get("vanId");
-    if (selectedVanId) setVanId(selectedVanId);
-  }, [location]);
+    if (selectedVanId) {
+      const van = vans.find(v => v._id === selectedVanId);
+      setSelectedVan(van);
+    }
+  }, [location, vans]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!passengerName || !vanId) {
-      alert("Please enter your name and select a van");
+    if (!passengerName || !selectedVan) {
+      alert("Please enter your name and ensure a van is selected");
+      return;
+    }
+
+    if (quantity < 1 || quantity > selectedVan.availableSeats) {
+      alert(`Please select between 1 and ${selectedVan.availableSeats} seats`);
       return;
     }
 
@@ -28,7 +38,7 @@ export default function ReservationForm() {
       const res = await fetch("http://localhost:3000/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passengerName, vanId }),
+        body: JSON.stringify({ passengerName, vanId: selectedVan._id, quantity }),
       });
 
       const data = await res.json();
@@ -38,13 +48,22 @@ export default function ReservationForm() {
         return;
       }
 
-      setSuccess(`Reservation successful for ${passengerName}`);
-      setPassengerName("");
-      setVanId(""); // reset van select only if you want
-
       fetchVans(); // refresh available seats
 
-      setTimeout(() => setSuccess(""), 5000);
+      // Navigate to ticket page with reservation details
+      navigate("/ticket", {
+        state: {
+          ticket: {
+            passengerName,
+            quantity,
+            van: {
+              plateNumber: selectedVan.plateNumber,
+              route: selectedVan.route,
+              driverName: selectedVan.driverName,
+            },
+          },
+        },
+      });
     } catch (err) {
       console.error(err);
       alert("An error occurred while reserving. Try again.");
@@ -58,9 +77,9 @@ export default function ReservationForm() {
           Reserve a Seat
         </h1>
 
-        {vans.length === 0 ? (
+        {!selectedVan ? (
           <p className="text-green-700 text-center font-semibold">
-            No vans available at the moment.
+            Please select a van from the Available Vans page.
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -73,31 +92,34 @@ export default function ReservationForm() {
                 placeholder="Enter your full name"
                 value={passengerName}
                 onChange={(e) => setPassengerName(e.target.value)}
+                required
                 className="w-full p-3 border border-green-300 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition duration-300 text-black"
               />
             </div>
 
+            <div className="bg-green-50 p-4 rounded-xl border border-green-300">
+              <h3 className="font-semibold text-green-900 mb-2">Selected Van</h3>
+              <div className="space-y-1 text-black">
+                <p><span className="font-semibold">Route:</span> {selectedVan.route}</p>
+                <p><span className="font-semibold">Driver:</span> {selectedVan.driverName}</p>
+                <p><span className="font-semibold">Van Number:</span> {selectedVan.plateNumber}</p>
+                <p><span className="font-semibold">Available Seats:</span> {selectedVan.availableSeats}</p>
+              </div>
+            </div>
+
             <div>
               <label className="block mb-2 font-semibold text-green-900">
-                Select Van:
+                Number of Seats to Reserve:
               </label>
-              <select
-                value={vanId}
-                onChange={(e) => setVanId(e.target.value)}
+              <input
+                type="number"
+                min="1"
+                max={selectedVan.availableSeats}
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                required
                 className="w-full p-3 border border-green-300 rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition duration-300 text-black"
-              >
-                <option value="">-- Choose a van --</option>
-                {vans.map((v) => (
-                  <option
-                    key={v._id}
-                    value={v._id}
-                    disabled={v.status !== "Waiting" || v.availableSeats === 0}
-                  >
-                    {v.route} — {v.driverName} | Seats Left: {v.availableSeats}{" "}
-                    {v.status !== "Waiting" || v.availableSeats === 0 ? "(Unavailable)" : ""}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             <button

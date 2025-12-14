@@ -7,8 +7,13 @@ const Reservation = require("../models/Reservation");
 // GET /vans → return all vans
 router.get('/', async (req, res) => {
   try {
-    const vans = await Van.find();
-    res.status(200).json(vans);
+    const vans = await Van.find().populate('driver', 'name');
+    // Add driverName field for frontend compatibility
+    const vansWithDriverName = vans.map(van => ({
+      ...van.toObject(),
+      driverName: van.driver ? van.driver.name : 'No Driver Assigned'
+    }));
+    res.status(200).json(vansWithDriverName);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
