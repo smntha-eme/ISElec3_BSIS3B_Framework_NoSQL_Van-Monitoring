@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../pages/logo.jpg"; // replace with your logo path
+import logo from "../pages/logovan.png"; // replace with your logo path
 
 export default function Home() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Home() {
           <img
             src={logo}
             alt="UV Express Logo"
-            className="h-24 w-24 md:h-32 md:w-32 object-contain"
+            className="h-24 w-24 md:h-32 md:w-32 object-cover"
           />
         </div>
       </div>

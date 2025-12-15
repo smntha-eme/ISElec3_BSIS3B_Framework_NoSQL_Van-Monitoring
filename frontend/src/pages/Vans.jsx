@@ -44,7 +44,7 @@ export default function Vans() {
   if (loading)
     return (
       <div className="p-8 text-center text-green-700 text-xl font-semibold">
-        Loading vans...
+        Wait a minute...
       </div>
     );
 
