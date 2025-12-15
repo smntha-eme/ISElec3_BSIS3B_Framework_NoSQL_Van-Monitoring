@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { VanContext } from "../context/vanContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import API_URL from "../config";
 
 export default function ReservationForm() {
   const { vans, fetchVans } = useContext(VanContext);
@@ -31,7 +32,7 @@ export default function ReservationForm() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:3000/reservations", {
+      const res = await fetch(`${API_URL}/reservations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ passengerName, vanId: selectedVan._id, quantity }),

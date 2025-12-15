@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../config";
 
 export default function Vans() {
   const [vans, setVans] = useState([]);
@@ -11,7 +12,7 @@ export default function Vans() {
 
   const fetchVans = async () => {
     try {
-      const res = await fetch("http://localhost:3000/vans");
+      const res = await fetch(`${API_URL}/vans`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setVans(data);

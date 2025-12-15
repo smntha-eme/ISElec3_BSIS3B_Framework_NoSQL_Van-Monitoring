@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../config";
 
 const ReservationsList = () => {
   const [reservations, setReservations] = useState([]);
@@ -18,7 +19,7 @@ const ReservationsList = () => {
         
         // If driver is logged in, fetch driver details first
         if (token) {
-          const driverRes = await axios.get("http://localhost:3000/drivers/me", {
+          const driverRes = await axios.get(`${API_URL}/drivers/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           vanId = driverRes.data.van?._id;
@@ -28,7 +29,7 @@ const ReservationsList = () => {
         setDriverLoaded(true);
 
         // Now fetch reservations
-        const res = await fetch("http://localhost:3000/reservations");
+        const res = await fetch(`${API_URL}/reservations`);
         const data = await res.json();
         
         // Filter reservations by driver's van if logged in
@@ -78,8 +79,7 @@ const ReservationsList = () => {
                 <tr>
                   <th className="p-3 text-left">Passenger Name</th>
                   <th className="p-3 text-left">Van Route</th>
-                  <th className="p-3 text-left">Driver</th>
-                  <th className="p-3 text-center">Seat Number</th>
+                  <th className="p-3 text-center">Seats Reserved</th>
                   <th className="p-3 text-center">Van Status</th>
                 </tr>
               </thead>
@@ -91,10 +91,8 @@ const ReservationsList = () => {
                   >
                     <td className="p-3 border text-left">{resv.passengerName}</td>
                     <td className="p-3 border text-left">{resv.van?.route || "N/A"}</td>
-                    <td className="p-3 border text-left">{resv.van?.driverName || "N/A"}</td>
-                    <td className="p-3 border text-center">{resv.seatNumber}</td>
-                    <td className="p-3 border text-center">
-                      {resv.van?.status ? (
+                    <td className="p-3 border text-center">{resv.quantity || 1}</td>
+                    <td className="p-3 border text-center">{resv.van?.status ? (
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-semibold ${
                             resv.van.status === "Waiting"

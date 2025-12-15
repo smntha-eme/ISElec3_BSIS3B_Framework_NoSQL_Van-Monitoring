@@ -2,6 +2,8 @@
 =======
 # UV Express Van Monitoring and Reservation System for Legazpi-Polangui Route 
  Finals Requirement For IS ELEC 3 
+ 
+ BS Information System 3B
 
 ## TEAM MEMBERS & ASSIGNED ROLES ##
 Project Manager & Tester/QA: Dela Paz, Paula Bianca D.
@@ -99,3 +101,7 @@ Implemented error handling for:
 - Reservation Form
 - Logout & Token Handling
 - Delete Driver Account
+
+# PROJECT STATUS #
+Completed
+

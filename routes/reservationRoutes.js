@@ -5,7 +5,7 @@ const Reservation = require('../models/Reservation');
 const Van = require('../models/Van');
 
 router.post('/', async (req, res) => {
-  const { vanId, passengerName } = req.body;
+  const { vanId, passengerName, quantity } = req.body;
   
   if (!vanId || !passengerName) {
     return res.status(400).json({ error: "vanId and passengerName are required" });
@@ -15,25 +15,24 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: "Invalid van ID" });
   }
 
+  const reservationQuantity = quantity || 1;
+
   try {
     const van = await Van.findById(vanId);
     if (!van) return res.status(404).json({ error: "Van not found" });
-    if (van.availableSeats <= 0) {
-      return res.status(400).json({ error: "No available seats" });
+    if (van.availableSeats < reservationQuantity) {
+      return res.status(400).json({ error: `Only ${van.availableSeats} seat(s) available` });
     }
-
-    // ✅ FIXED seatNumber LOGIC
-    const seatNumber = 13 - van.availableSeats; // 12 seats default
 
     const reservation = new Reservation({
       van: vanId,
       passengerName,
-      seatNumber
+      quantity: reservationQuantity
     });
 
     await reservation.save();
 
-    van.availableSeats -= 1;
+    van.availableSeats -= reservationQuantity;
     await van.save();
 
     res.status(201).json({
@@ -82,7 +81,7 @@ router.delete('/:id', async (req, res) => {
 
     const van = await Van.findById(reservation.van);
     if (van) {
-      van.availableSeats += 1;
+      van.availableSeats += (reservation.quantity || 1);
       await van.save();
     }
 

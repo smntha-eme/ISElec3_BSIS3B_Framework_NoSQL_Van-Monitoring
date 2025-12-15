@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config";
 
 export default function DriverLogin() {
   const navigate = useNavigate();
@@ -16,7 +17,15 @@ export default function DriverLogin() {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       const res = await axios.post("http://localhost:3000/drivers/login", { email, password });
+=======
+      const res = await axios.post(
+        `${API_URL}/drivers/login`,
+        { email, password }
+      );
+
+>>>>>>> fbf7806a30184e321de93c4135c087b563dc5c7a
       localStorage.setItem("driverToken", res.data.token);
       navigate("/driver-panel");
     } catch (err) {

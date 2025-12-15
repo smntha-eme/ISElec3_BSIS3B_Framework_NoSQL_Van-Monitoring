@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config";
 
 export default function DriverPanel() {
   const [driver, setDriver] = useState(null);
@@ -18,7 +19,7 @@ export default function DriverPanel() {
     }
 
     axios
-      .get("http://localhost:3000/drivers/me", {
+      .get(`${API_URL}/drivers/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -36,7 +37,7 @@ export default function DriverPanel() {
   const updateStatus = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:3000/drivers/${driver._id}/van-status`,
+        `${API_URL}/drivers/${driver._id}/van-status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -52,7 +53,7 @@ export default function DriverPanel() {
   const updateAvailableSeats = async (newSeats) => {
     try {
       const res = await axios.put(
-        `http://localhost:3000/drivers/${driver._id}/van-seats`,
+        `${API_URL}/drivers/${driver._id}/van-seats`,
         { availableSeats: newSeats },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -84,7 +85,7 @@ export default function DriverPanel() {
     if (!window.confirm("Are you sure you want to delete your driver account?")) return;
 
     try {
-      await axios.delete("http://localhost:3000/drivers/me", {
+      await axios.delete(`${API_URL}/drivers/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       localStorage.removeItem("driverToken");
