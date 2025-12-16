@@ -8,7 +8,13 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://iselec3-bsis3b-framework-nosql-van-monitoring.pages.dev'
+  ],
+  credentials: true
+}));
 app.use("/uploads", express.static("uploads"));
 
 // ================= DATABASE =================
