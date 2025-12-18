@@ -105,3 +105,12 @@ Implemented error handling for:
 # PROJECT STATUS #
 Completed
 
+## Deployed System Links
+
+Live System:  
+https://iselec3-bsis3b-framework-nosql-van-monitoring.pages.dev/
+
+Backend API:  
+https://iselec3-bsis3b-framework-nosql-van.onrender.com/
+
+
